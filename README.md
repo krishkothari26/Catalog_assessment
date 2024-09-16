@@ -212,11 +212,3 @@ To run the JavaScript code, ensure you have **Node.js** installed on your system
 
 - If there are not enough data points (less than `k`) to determine the polynomial, an error will be thrown.
 - Ensure that the JSON input follows the specified structure to avoid parsing errors.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-This guide now includes the steps for running the JavaScript code using Node.js.
