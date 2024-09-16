@@ -1,10 +1,10 @@
-Here’s an updated version of the README file with steps to run the JavaScript code:
+Here's an updated version of the README file to include instructions for identifying incorrect roots:
 
 ---
 
 # Polynomial Constant Term Finder
 
-This project provides a method for finding the constant term of a polynomial using **Lagrange Interpolation**. The code processes JSON input containing encoded values in different bases, decodes these values, and then calculates the constant term of a polynomial based on the provided data points.
+This project provides a method for finding the constant term of a polynomial using **Lagrange Interpolation** and identifying incorrect roots from a given set of data points. The code processes JSON input containing encoded values in different bases, decodes these values, computes the constant term of the polynomial, and detects any incorrect roots.
 
 ## Overview
 
@@ -12,7 +12,8 @@ The project includes the following key components:
 
 1. **`decodeValue` Function**: Decodes a given value from a specified base.
 2. **`findPolynomialConstantTerm` Function**: Uses Lagrange Interpolation to find the constant term of a polynomial.
-3. **`main` Function**: Processes JSON input, decodes the values, and computes the constant term.
+3. **`findIncorrectRoots` Function**: Identifies incorrect roots among the provided data points.
+4. **`main` Function**: Processes JSON input, decodes the values, computes the constant term, and identifies incorrect roots.
 
 ## Functions
 
@@ -36,14 +37,24 @@ Finds the constant term of a polynomial using Lagrange Interpolation.
 - **Returns**:
   - `(number)`: The constant term of the polynomial.
 
+### `findIncorrectRoots(jsonInput)`
+Identifies incorrect roots among the provided data points by checking which points do not fit any polynomial formed by a subset of the given points.
+
+- **Parameters**:
+  - `jsonInput` (string): A JSON string containing encoded data.
+  
+- **Returns**:
+  - `(Array<number>)`: An array of x-values corresponding to incorrect roots.
+
 ### `main(jsonInput)`
-Processes the JSON input to decode the values and compute the polynomial constant term.
+Processes the JSON input to decode the values, compute the polynomial constant term, and identify incorrect roots.
 
 - **Parameters**:
   - `jsonInput` (string): A JSON string containing encoded data.
   
 - **Returns**:
   - `(number)`: The constant term of the polynomial.
+  - `(Array<number>)`: An array of x-values corresponding to incorrect roots.
 
 ## Usage
 
@@ -92,7 +103,7 @@ const jsonInput = JSON.stringify({
     }
 });
 
-console.log(main(jsonInput));  // Output the constant term
+console.log(main(jsonInput));  // Output the constant term and identify incorrect roots
 ```
 
 ### 3. Example 1
@@ -123,7 +134,7 @@ const jsonInput1 = JSON.stringify({
     }
 });
 
-console.log(main(jsonInput1));  // Output the constant term
+console.log(main(jsonInput1));  // Output the constant term and identify incorrect roots
 ```
 
 ### 4. Example 2
@@ -174,7 +185,7 @@ const jsonInput2 = JSON.stringify({
     }
 });
 
-console.log(main(jsonInput2));  // Output the constant term
+console.log(main(jsonInput2));  // Output the constant term and identify incorrect roots
 ```
 
 ## Steps to Run the Code
@@ -200,15 +211,17 @@ To run the JavaScript code, ensure you have **Node.js** installed on your system
    node polynomial.js
    ```
 
-   This will execute the `main` function with the sample JSON input and print the constant term of the polynomial to the console.
+   This will execute the `main` function with the sample JSON input and print the constant term of the polynomial and any identified incorrect roots to the console.
 
 ### Example Output
 
 ```bash
-4
+Constant Term: 28735619723837
+Incorrect Roots: [ 4, 7 ]
 ```
 
 ## Error Handling
 
 - If there are not enough data points (less than `k`) to determine the polynomial, an error will be thrown.
 - Ensure that the JSON input follows the specified structure to avoid parsing errors.
+- If there are errors in evaluating or identifying incorrect roots, check for proper implementation of the polynomial interpolation and root validation.
