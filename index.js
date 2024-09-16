@@ -2,16 +2,13 @@ function decodeValue(valueStr, base) {
     return parseInt(valueStr, base);
 }
 
-// Function to find the constant term of the polynomial using Lagrange Interpolation
-function findPolynomialConstantTerm(xValues, yValues) {
+function findPolynomialCoefficients(xValues, yValues) {
     const n = xValues.length;
    
-    // Matrix for solving the linear system A * coeffs = b
     const A = Array.from({ length: n }, (_, i) =>
         Array.from({ length: n }, (_, j) => Math.pow(xValues[i], j))
     );
    
-    // Solve the system A * coeffs = b using Gaussian elimination
     function gaussianElimination(A, b) {
         const n = b.length;
         for (let i = 0; i < n; i++) {
@@ -45,12 +42,13 @@ function findPolynomialConstantTerm(xValues, yValues) {
     }
    
     const b = yValues.slice();
-    const coeffs = gaussianElimination(A, b);
-   
-    return coeffs[0];
+    return gaussianElimination(A, b);
 }
 
-// Main function to process the JSON input
+function evaluatePolynomial(coeffs, x) {
+    return coeffs.reduce((sum, coeff, power) => sum + coeff * Math.pow(x, power), 0);
+}
+
 function main(jsonInput) {
     const data = JSON.parse(jsonInput);
    
@@ -74,42 +72,30 @@ function main(jsonInput) {
         throw new Error("Not enough data points to determine the polynomial.");
     }
    
-    const constantTerm = findPolynomialConstantTerm(xValues.slice(0, k), yValues.slice(0, k));
+    const coeffs = findPolynomialCoefficients(xValues.slice(0, k), yValues.slice(0, k));
+    const constantTerm = coeffs[0];
    
-    return constantTerm;
-}
-
-const jsonInput1 = `
-{
-    "keys": {
-        "n": 4,
-        "k": 3
-    },
-    "1": {
-        "base": "10",
-        "value": "4"
-    },
-    "2": {
-        "base": "2",
-        "value": "111"
-    },
-    "3": {
-        "base": "10",
-        "value": "12"
-    },
-    "6": {
-        "base": "4",
-        "value": "213"
+    const incorrectRoots = [];
+    const tolerance = 1e-6; // Tolerance for floating-point comparisons
+   
+    for (let i = 0; i < xValues.length; i++) {
+        const x = xValues[i];
+        const y = yValues[i];
+        const calculatedY = evaluatePolynomial(coeffs, x);
+       
+        if (Math.abs(y - calculatedY) > tolerance) {
+            incorrectRoots.push(x);
+        }
     }
+   
+    return {
+        constantTerm: constantTerm,
+        incorrectRoots: incorrectRoots
+    };
 }
-`;
-
-console.log(main(jsonInput1));  // Output the constant term
-
 
 // Sample JSON input
-const jsonInput2 = `
-{
+const jsonInput1 = `{
     "keys": {
         "n": 9,
         "k": 6
@@ -150,8 +136,9 @@ const jsonInput2 = `
         "base": "8",
         "value": "642121030037605"
     }
-}
 
-`;
+}`;
 
-console.log(main(jsonInput2));  // Output the constant term
+
+
+console.log("Test Case 1:", main(jsonInput1));
